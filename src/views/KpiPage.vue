@@ -19,71 +19,121 @@
 
 
             <h1 class="ion-padding">🚀 KPIs de Negocio</h1>
-            <ion-accordion-group expand="inset" :multiple="true">
+            <ion-accordion-group expand="inset" :multiple="false">
                 <ion-accordion value="1">
                     <ion-item slot="header">
                         <ion-label>⏱️ Tiempo medio de respuesta de la API (ms)</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Mejorar el tiempo de respuesta de la API a < 300 ms</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Reducir el tiempo de respuesta promedio de la API a menos de 300 ms.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Medición en milisegundos mediante métricas en tiempo real.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Optimización de consultas SQL y caché de Redis.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Mejora la experiencia de usuario y reduce abandonos.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Meta para Q3 2024.</div>
                 </ion-accordion>
+
                 <ion-accordion value="2">
                     <ion-item slot="header">
-                        <ion-label>🔐 % de endpoints con cifrado activo</ion-label>
+                        <ion-label>📱 Compatibilidad Móvil al 98%</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Asegurar cifrado completo de datos sensibles antes del fin de Q2</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Garantizar que el 98% de las funcionalidades funcionen en Android/iOS.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Pruebas automatizadas con Detox/Cypress.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Equipo QA dedicado y ciclos de testing semanales.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Asegura adopción en mercados móviles.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Lograr antes del lanzamiento oficial (Q4 2024).</div>
                 </ion-accordion>
+
                 <ion-accordion value="3">
                     <ion-item slot="header">
-                        <ion-label>⚠️ Nº de errores/bugs reportados en módulo de eventos</ion-label>
+                        <ion-label>🚪 Reducción de abandonos en login al 10%</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Reducir errores en eventos a una tasa < 2% en beta</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Disminuir la tasa de abandono en pantallas de inicio al 10%.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Segmentación por fuentes de tráfico (Google, redes sociales).</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Rediseño UX del flujo de registro.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Incrementa conversiones a usuarios activos.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>6 meses tras implementación.</div>
                 </ion-accordion>
+
                 <ion-accordion value="4">
                     <ion-item slot="header">
-                        <ion-label>📱 % de funcionalidades verificadas en cada plataforma (Android/iOS)</ion-label>
+                        <ion-label>📈 Crecimiento Mensual de Usuarios del 20%</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Garantizar compatibilidad en Android/iOS</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Aumentar base de usuarios en un 20% mensual.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Seguimiento con Mixpanel/Google Analytics.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Campañas de marketing en redes y partnerships.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Expansión del mercado objetivo.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Mantener durante 2024.</div>
                 </ion-accordion>
+
                 <ion-accordion value="5">
                     <ion-item slot="header">
-                        <ion-label>🧪 % de cobertura por tests unitarios y código duplicado (DRY ratio)</ion-label>
+                        <ion-label>💬 Retención a 7 días del 60%</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Mejorar mantenibilidad y reducir duplicación de código</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Lograr que el 60% de usuarios nuevos usen la app tras 7 días.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Cohortes diarias en herramientas de analytics.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Notificaciones push y onboarding guiado.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Indica valor percibido por los usuarios.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Beta cerrada (Q3 2024).</div>
                 </ion-accordion>
+
             </ion-accordion-group>
             <br>
             <h1 class="ion-padding">📈 KPIs Técnicos</h1>
-            <ion-accordion-group expand="inset" :multiple="true">
+            <ion-accordion-group expand="inset" :multiple="false">
                 <ion-accordion value="1">
                     <ion-item slot="header">
-                        <ion-label>📊 Tasa de retención a 7 días (%)</ion-label>
+                        <ion-label>🔐 Cifrado del 100% en endpoints críticos</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Lograr una retención del 60% a los 7 días durante la beta</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Implementar SSL/TLS en todos los endpoints con datos sensibles.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Auditoría mensual con OWASP ZAP.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Certificados Let’s Encrypt y configuración Nginx. </div>
+                    <div class="ion-padding" slot="content"><b>R </b>Mitiga riesgos de brechas de seguridad.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Q2 2024.</div>
                 </ion-accordion>
+
                 <ion-accordion value="2">
                     <ion-item slot="header">
-                        <ion-label>💬 % de nuevos usuarios que inician conversación en los primeros 3 días</ion-label>
+                        <ion-label>🧪 Cobertura de tests unitarios del 85%</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Que el 70% de nuevos usuarios envíen un mensaje en 3 días</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Aumentar cobertura de tests en código base al 85%.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Reportes de Jest/Cypress en CI/CD.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Desarrollo guiado por pruebas (TDD).</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Reduce bugs en producción.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Trimestral (Q3-Q4 2024).</div>
                 </ion-accordion>
+
                 <ion-accordion value="3">
                     <ion-item slot="header">
-                        <ion-label>📝 % de usuarios que envían feedback</ion-label>
+                        <ion-label>⚠️ Errores en módulo de eventos &lt; 2%</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Obtener feedback del 30% de usuarios beta en 2 semanas</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Limitar errores en el módulo de eventos al 2% de las transacciones.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Monitoreo con Sentry/New Relic.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Refactorización de código legacy.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Mejora estabilidad del core de la app.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Durante fase beta (Q3 2024).</div>
                 </ion-accordion>
+
                 <ion-accordion value="4">
                     <ion-item slot="header">
-                        <ion-label>🖥️ Nº de servidores activos conectados a V-LINK</ion-label>
+                        <ion-label>🖥️ Uso de CPU &lt; 70% en picos</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Integrar V-LINK en al menos 5 servidores de FiveM</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Mantener el uso de CPU bajo 70% durante picos de tráfico.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Alertas en Grafana/Prometheus.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Escalado horizontal en AWS/Azure.</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Previene caídas del servicio.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>Continuo (con revisión trimestral).</div>
                 </ion-accordion>
+
                 <ion-accordion value="5">
                     <ion-item slot="header">
-                        <ion-label>🚪 % de usuarios que abandonan sin completar login</ion-label>
+                        <ion-label>📝 Feedback del 30% de usuarios beta</ion-label>
                     </ion-item>
-                    <div class="ion-padding" slot="content">Reducir el abandono en la pantalla de inicio/login a < 15</div>
+                    <div class="ion-padding" slot="content"><b>S </b>Recopilar feedback del 30% de usuarios durante la beta.</div>
+                    <div class="ion-padding" slot="content"><b>M </b>Encuestas in-app y seguimiento de respuestas.</div>
+                    <div class="ion-padding" slot="content"><b>A </b>Incentivos (acceso premium por participar).</div>
+                    <div class="ion-padding" slot="content"><b>R </b>Guía mejoras priorizadas.</div>
+                    <div class="ion-padding" slot="content"><b>T </b>2 semanas tras lanzamiento beta.</div>
                 </ion-accordion>
+
             </ion-accordion-group>
 
         </ion-content>
@@ -96,20 +146,16 @@ import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, Io
 
 
 <style scoped>
-
-
 ion-accordion.accordion-collapsing ion-item[slot='header'],
-  ion-accordion.accordion-collapsed ion-item[slot='header'] {
+ion-accordion.accordion-collapsed ion-item[slot='header'] {
     --background: var(--ion-color-light);
     --color: var(--ion-color-light-contrast);
-  }
+}
 
 
-  ion-accordion.accordion-expanding ion-item[slot='header'],
-  ion-accordion.accordion-expanded ion-item[slot='header'] {
+ion-accordion.accordion-expanding ion-item[slot='header'],
+ion-accordion.accordion-expanded ion-item[slot='header'] {
     --background: rgba(var(--ion-color-primary-rgb), 0.14);
     color: var(--ion-color-primary);
-  }
-
-
+}
 </style>

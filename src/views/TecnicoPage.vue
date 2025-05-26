@@ -20,7 +20,7 @@
             <ion-grid class="dashboard-grid">
                 <!-- 🟢 Fila 1: 3 Columnas -->
                 <ion-row class="dashboard-row">
-                    <ion-col size="12" size-lg="4" class="dashboard-col">
+                    <ion-col size="5" size-lg="6" class="dashboard-col">
                         <div class="chart-box">
                             <h3>Rendimiento de API</h3>
                             <div class="chart-wrapper">
@@ -28,15 +28,7 @@
                             </div>
                         </div>
                     </ion-col>
-                    <ion-col size="6" size-lg="4">
-                        <div class="box">
-                            <div class="chart-container">
-                                <h3>Cobertura de Tests</h3>
-                                <div ref="testCoverageChart" style="width: 100%; height: 90%;"></div>
-                            </div>
-                        </div>
-                    </ion-col>
-                    <ion-col size="6" size-lg="4">
+                    <ion-col size="5" size-lg="6">
                         <div class="box">
                             <div class="chart-container">
                                 <h3>Errores por Módulo</h3>
@@ -47,7 +39,7 @@
                 </ion-row>
 
                 <!-- 🔵 Fila 2: 2 Columnas -->
-                <ion-row class="ion-row-2">
+                <ion-row class="dashboard-row">
                     <ion-col size="12" size-md="3" push-md="9">
                         <div class="box">
                             <div class="chart-container">
@@ -69,44 +61,44 @@
                     <ion-col size="12" size-md="9" pull-md="3">
                         <div class="box">
                             <div class="chart-container">
-                                <h3>Compatibilidad Móvil (Tiempo Real)</h3>
+                                <h3>Compatibilidad Aplicación (Tiempo Real)</h3>
                                 <div class="realtime-stats">
                                     <div class="stat-item">
-                                        <div class="stat-value">{{ mobileStats.android }}%</div>
                                         <div class="stat-label">Android</div>
                                         <div class="progress-bar">
                                             <div class="progress"
                                                 :style="{ width: `${mobileStats.android}%`, backgroundColor: '#3DDC84' }">
                                             </div>
+                                            <div class="stat-value">{{ mobileStats.android }}%</div>
                                         </div>
                                     </div>
                                     <div class="stat-item">
-                                        <div class="stat-value">{{ mobileStats.ios }}%</div>
                                         <div class="stat-label">iOS</div>
                                         <div class="progress-bar">
                                             <div class="progress"
                                                 :style="{ width: `${mobileStats.ios}%`, backgroundColor: '#007AFF' }">
                                             </div>
+                                            <div class="stat-value">{{ mobileStats.ios }}%</div>
                                         </div>
                                     </div>
                                     <div class="stat-item">
-                                        <div class="stat-value">{{ mobileStats.web }}%</div>
                                         <div class="stat-label">Web</div>
                                         <div class="progress-bar">
                                             <div class="progress"
                                                 :style="{ width: `${mobileStats.web}%`, backgroundColor: '#FF9500' }">
                                             </div>
+                                            <div class="stat-value">{{ mobileStats.web }}%</div>
                                         </div>
                                     </div>
                                 </div>
-                                <canvas ref="mobileCompatibilityChart"></canvas>
+                                <!-- <canvas ref="mobileCompatibilityChart"></canvas> -->
                             </div>
                         </div>
                     </ion-col>
                 </ion-row>
 
                 <!-- 🟠 Fila 3: 3 Columnas -->
-                <ion-row class="ion-row-3">
+                <ion-row class="dashboard-row">
                     <ion-col size="12" size-lg="4.5">
                         <div class="box">
                             <div class="chart-container">
@@ -170,8 +162,6 @@ use([CanvasRenderer, PieChart, LegendComponent, TooltipComponent]);
 
 // Referencias para los gráficos
 const apiPerformanceChart = ref(null);
-const testCoverageChart = ref(null);
-const mobileCompatibilityChart = ref(null);
 const resourceUsageChart = ref(null);
 const endpointPerformanceChart = ref(null);
 
@@ -190,9 +180,9 @@ const apiStatusText = computed(() => {
 
 // Estadísticas de compatibilidad móvil en tiempo real
 const mobileStats = reactive({
-    android: 78,
-    ios: 92,
-    web: 85
+    android: 33,
+    ios: 33,
+    web: 33
 });
 
 // Datos para el gráfico de errores por módulo (ECharts)
@@ -262,24 +252,11 @@ const updateApiStatus = () => {
 
 // Función para actualizar estadísticas de compatibilidad móvil
 const updateMobileStats = () => {
-    // Simular cambios en las estadísticas
     mobileStats.android = Math.floor(Math.min(100, Math.max(60, mobileStats.android + (Math.random() * 10 - 5))));
     mobileStats.ios = Math.floor(Math.min(100, Math.max(70, mobileStats.ios + (Math.random() * 10 - 5))));
     mobileStats.web = Math.floor(Math.min(100, Math.max(65, mobileStats.web + (Math.random() * 10 - 5))));
-
-    // Actualizar el gráfico de compatibilidad móvil
-    if (mobileCompatibilityChart.value) {
-        const chart = Chart.getChart(mobileCompatibilityChart.value);
-        if (chart) {
-            chart.data.datasets[0].data = [
-                mobileStats.android,
-                mobileStats.ios,
-                mobileStats.web
-            ];
-            chart.update();
-        }
-    }
 };
+
 
 onMounted(() => {
     // 1. Gráfico de rendimiento de API (Chart.js)
@@ -289,50 +266,54 @@ onMounted(() => {
         apiChart = new Chart(apiPerformanceChart.value, {
             type: 'line',
             data: {
-                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
                 datasets: [
                     {
                         label: 'Tiempo de respuesta (ms)',
-                        data: [120, 115, 130, 125, 110, 105, 115, 120, 110, 100, 95, 90],
+                        data: [120, 115, 130, 125, 110, 105],
                         borderColor: '#36A2EB',
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
                         tension: 0.4,
                         fill: false,
                         borderWidth: 2,
-                        pointRadius: 2
+                        pointRadius: 3,
+                        pointHoverRadius: 5
                     },
                     {
                         label: 'Solicitudes/min',
-                        data: [300, 320, 310, 340, 360, 380, 390, 400, 410, 420, 430, 450],
+                        data: [300, 320, 310, 340, 360, 380],
                         borderColor: '#FF6384',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
                         tension: 0.4,
                         fill: true,
                         yAxisID: 'y1',
                         borderWidth: 2,
-                        pointRadius: 2
+                        pointRadius: 3,
+                        pointHoverRadius: 5
                     }
                 ]
             },
             options: {
-                responsive: false,
+                responsive: true,
                 maintainAspectRatio: false,
-                animation: {
-                    duration: 0 // Desactivar animaciones para mejorar rendimiento
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 150, // Limitar el eje Y
+                        max: 150,
                         title: {
-                            display: false,
+                            display: true,
+                            text: 'ms',
+                            color: '#ccc',
+                            font: { size: 10 }
                         },
                         ticks: {
                             color: '#ccc',
-                            font: {
-                                size: 10
-                            },
-                            stepSize: 50
+                            font: { size: 9 },
+                            stepSize: 30
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -341,15 +322,16 @@ onMounted(() => {
                     y1: {
                         beginAtZero: true,
                         position: 'right',
-                        max: 500, // Limitar el eje Y
+                        max: 400,
                         title: {
-                            display: false,
+                            display: true,
+                            text: 'req/min',
+                            color: '#ccc',
+                            font: { size: 10 }
                         },
                         ticks: {
                             color: '#ccc',
-                            font: {
-                                size: 10
-                            },
+                            font: { size: 9 },
                             stepSize: 100
                         },
                         grid: {
@@ -359,10 +341,7 @@ onMounted(() => {
                     x: {
                         ticks: {
                             color: '#ccc',
-                            font: {
-                                size: 10
-                            },
-                            maxTicksLimit: 6
+                            font: { size: 9 }
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -375,163 +354,15 @@ onMounted(() => {
                         align: 'start',
                         labels: {
                             color: '#fff',
-                            boxWidth: 12,
-                            padding: 8,
-                            font: {
-                                size: 10
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    // 2. Gráfico de cobertura de tests (ApexCharts)
-    // Modificación del gráfico de cobertura de tests
-    if (testCoverageChart.value) {
-        const testCoverageOptions = {
-            series: [{
-                name: 'Cobertura',
-                data: [85, 75, 92, 65, 88, 70]
-            }],
-            chart: {
-                type: 'bar',
-                height: '100%',
-                toolbar: {
-                    show: false
-                },
-                foreColor: '#ccc',
-                background: 'transparent'
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 2,
-                    horizontal: true,
-                    barHeight: '70%',
-                    distributed: true,
-                    dataLabels: {
-                        position: 'middle'
-                    }
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function (val) {
-                    return val + '%';
-                },
-                style: {
-                    fontSize: '10px',
-                    colors: ['#fff'],
-                    fontWeight: 'normal'
-                },
-                offsetX: 0
-            },
-            colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
-            xaxis: {
-                categories: ['Core', 'UI', 'API', 'Auth', 'Utils', 'Database'],
-                labels: {
-                    style: {
-                        colors: '#ccc',
-                        fontSize: '10px'
-                    }
-                },
-                max: 100,
-                tickAmount: 5
-            },
-            yaxis: {
-                labels: {
-                    style: {
-                        colors: '#ccc',
-                        fontSize: '10px'
-                    }
-                }
-            },
-            grid: {
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                xaxis: {
-                    lines: {
-                        show: true
-                    }
-                },
-                yaxis: {
-                    lines: {
-                        show: false
-                    }
-                },
-                padding: {
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 10
-                }
-            },
-            tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: function (val) {
-                        return val + '%';
-                    }
-                }
-            }
-        };
-
-        const testCoverageApexChart = new ApexCharts(testCoverageChart.value, testCoverageOptions);
-        testCoverageApexChart.render();
-    }
-
-    // 3. Gráfico de compatibilidad móvil en tiempo real (Chart.js)
-    if (mobileCompatibilityChart.value) {
-        new Chart(mobileCompatibilityChart.value, {
-            type: 'line',
-            data: {
-                labels: Array.from({ length: 20 }, (_, i) => i + 1),
-                datasets: [
-                    {
-                        label: 'Compatibilidad',
-                        data: Array.from({ length: 20 }, () => Math.floor(Math.random() * 30) + 70),
-                        borderColor: '#4BC0C0',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        tension: 0.4,
-                        fill: true
-                    }
-                ]
-            },
-            options: {
-                responsive: false,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 50,
-                        max: 100,
-                        title: {
-                            display: true,
-                            text: 'Compatibilidad (%)',
-                            color: '#fff'
-                        },
-                        ticks: {
-                            color: '#ccc'
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
+                            boxWidth: 10,
+                            padding: 6,
+                            font: { size: 9 }
                         }
                     },
-                    x: {
-                        ticks: {
-                            color: '#ccc',
-                            maxTicksLimit: 10
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#fff'
-                        }
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff'
                     }
                 }
             }
@@ -547,7 +378,7 @@ onMounted(() => {
                 datasets: [
                     {
                         label: 'CPU (%)',
-                        data: [30, 45, 65, 70, 60, 40],
+                        data: [30, 45, 65, 70, 60, 86],
                         borderColor: '#FF6384',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         tension: 0.4,
@@ -564,7 +395,7 @@ onMounted(() => {
                 ]
             },
             options: {
-                responsive: false,
+                responsive: true,
                 maintainAspectRatio: false,
                 scales: {
                     y: {
@@ -636,7 +467,7 @@ onMounted(() => {
                 }
             },
             xaxis: {
-                categories: ['/users', '/auth', '/products', '/orders', '/payments', '/analytics', '/settings'],
+                categories: ['/users', '/auth', '/messages', '/profiles', '/help', '/ws', '/settings'],
                 labels: {
                     style: {
                         colors: Array(7).fill('#ccc')
@@ -688,17 +519,18 @@ ion-col {
     border-radius: 5px;
     display: flex;
     justify-content: center;
-    align-items: start;
-    padding: 15px;
+    align-items: stretch;
+    padding: 12px;
 }
 
 .chart-box {
     background: #1E1E1E;
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px;
     height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .chart-box h3 {
@@ -706,33 +538,33 @@ ion-col {
     font-size: 14px;
     color: #fff;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .chart-wrapper {
     flex: 1;
     position: relative;
-    min-height: 200px;
-    /* Altura mínima para móviles */
-}
-
-.dashboard-grid {
-    height: calc(100vh - 120px);
-    /* Ajustar según el header */
-    display: flex;
-    flex-direction: column;
-}
-
-.dashboard-row {
-    flex: 1;
     min-height: 0;
-    /* Importante para flexbox en Chrome */
-    margin-bottom: 10px;
+    width: 100%;
+    height: 100%;
 }
 
-.dashboard-col {
+.chart-wrapper canvas {
+    max-width: 100% !important;
+    max-height: 100% !important;
+}
+
+/* Asegurar que los gráficos no se desborden */
+.box {
+    background: #1E1E1E;
     height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: 5px;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    padding: 12px;
 }
 
 .chart-container {
@@ -740,14 +572,15 @@ ion-col {
     height: 100%;
     display: flex;
     flex-direction: column;
+    min-height: 0;;
 }
 
 .chart-container h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 16px;
+    margin: 0 0 8px 0;
+    font-size: 14px;
     color: #fff;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .chart {
@@ -813,39 +646,52 @@ ion-col {
 /* Estadísticas de compatibilidad móvil */
 .realtime-stats {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 10px;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    justify-content: center;
+    /* margin-bottom: 15px; */
+    flex: 1;
 }
 
 .stat-item {
-    flex: 1 1 100px;
-    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .stat-value {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     color: #fff;
+    text-align: center;
 }
 
 .stat-label {
-    font-size: 14px;
+    font-size: 12px;
     color: #ccc;
-    margin-bottom: 5px;
+    text-align: center;
+    margin-bottom: 4px;
 }
 
 .progress-bar {
-    height: 8px;
+    height: 20px;
     background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .progress {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 10px;
     transition: width 0.5s ease;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 /* Estadísticas de seguridad */
@@ -921,26 +767,12 @@ ion-col {
     padding: 10px;
 }
 
-/* Aumentar la altura de la primera fila */
-@media (min-width: 992px) {
-    .ion-row-1 {
-        height: 25%;
-        /* Aumentado del 20% al 25% */
-        max-height: 25%;
-    }
-
-    .ion-row-2 {
-        height: 37.5%;
-        /* Ajustado */
-        max-height: 37.5%;
-    }
-
-    .ion-row-3 {
-        height: 37.5%;
-        /* Ajustado */
-        max-height: 37.5%;
-    }
+.dashboard-grid {
+    height: calc(100vh - 90px);
+    display: flex;
+    flex-direction: column;
 }
+
 
 @media (max-width: 768px) {
     .dashboard-grid {
@@ -962,26 +794,30 @@ ion-col {
 }
 
 @media (min-width: 992px) {
-    .dashboard-row {
-        flex: 1;
+    .dashboard-grid {
+        height: calc(100vh - 120px);
         display: flex;
+        flex-direction: column;
     }
 
-    /* Distribución de altura para escritorio */
+    .dashboard-row {
+        display: flex;
+        min-height: 0;
+    }
+
     .dashboard-row:nth-child(1) {
         flex: 1;
+        /* Fila 1 más grande */
     }
 
-    /* Fila 1 - 25% */
     .dashboard-row:nth-child(2) {
-        flex: 1.5;
+        flex: 1.3;
+        /* Fila 2 mediana */
     }
 
-    /* Fila 2 - 37.5% */
     .dashboard-row:nth-child(3) {
         flex: 1.5;
+        /* Fila 3 mediana */
     }
-
-    /* Fila 3 - 37.5% */
 }
 </style>
