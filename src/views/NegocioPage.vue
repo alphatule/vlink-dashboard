@@ -729,7 +729,7 @@ onMounted(() => {
     }
 
     // Iniciar actualizaciones en tiempo real
-    setInterval(updateActiveUsers, 5000);
+    setInterval(updateActiveUsers, 2000);
 });
 
 // Función auxiliar para generar datos de heatmap
@@ -865,7 +865,6 @@ ion-col {
 
 .conversion-title {
     font-size: 12px;
-    /* Reducido */
     color: #fff;
     line-height: 1.2;
 }
@@ -878,7 +877,6 @@ ion-col {
 
 .conversion-bar {
     height: 6px;
-    /* Reducido */
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     overflow: hidden;
