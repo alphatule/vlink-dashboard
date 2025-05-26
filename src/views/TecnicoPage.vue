@@ -19,11 +19,11 @@
             <!-- Grid principal del Dashboard -->
             <ion-grid class="dashboard-grid">
                 <!-- 🟢 Fila 1: 3 Columnas -->
-                <ion-row class="ion-row-1">
-                    <ion-col size="12" size-lg="4">
-                        <div class="box">
-                            <div class="chart-container">
-                                <h3>Rendimiento de API</h3>
+                <ion-row class="dashboard-row">
+                    <ion-col size="12" size-lg="4" class="dashboard-col">
+                        <div class="chart-box">
+                            <h3>Rendimiento de API</h3>
+                            <div class="chart-wrapper">
                                 <canvas ref="apiPerformanceChart"></canvas>
                             </div>
                         </div>
@@ -283,8 +283,10 @@ const updateMobileStats = () => {
 
 onMounted(() => {
     // 1. Gráfico de rendimiento de API (Chart.js)
+    let apiChart = null;
+
     if (apiPerformanceChart.value) {
-        new Chart(apiPerformanceChart.value, {
+        apiChart = new Chart(apiPerformanceChart.value, {
             type: 'line',
             data: {
                 labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -295,7 +297,9 @@ onMounted(() => {
                         borderColor: '#36A2EB',
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         tension: 0.4,
-                        fill: true
+                        fill: false,
+                        borderWidth: 2,
+                        pointRadius: 2
                     },
                     {
                         label: 'Solicitudes/min',
@@ -304,23 +308,31 @@ onMounted(() => {
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         tension: 0.4,
                         fill: true,
-                        yAxisID: 'y1'
+                        yAxisID: 'y1',
+                        borderWidth: 2,
+                        pointRadius: 2
                     }
                 ]
             },
             options: {
-                responsive: true,
+                responsive: false,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 0 // Desactivar animaciones para mejorar rendimiento
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
+                        max: 150, // Limitar el eje Y
                         title: {
-                            display: true,
-                            text: 'Tiempo (ms)',
-                            color: '#fff'
+                            display: false,
                         },
                         ticks: {
-                            color: '#ccc'
+                            color: '#ccc',
+                            font: {
+                                size: 10
+                            },
+                            stepSize: 50
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -329,13 +341,16 @@ onMounted(() => {
                     y1: {
                         beginAtZero: true,
                         position: 'right',
+                        max: 500, // Limitar el eje Y
                         title: {
-                            display: true,
-                            text: 'Solicitudes/min',
-                            color: '#fff'
+                            display: false,
                         },
                         ticks: {
-                            color: '#ccc'
+                            color: '#ccc',
+                            font: {
+                                size: 10
+                            },
+                            stepSize: 100
                         },
                         grid: {
                             display: false
@@ -343,7 +358,11 @@ onMounted(() => {
                     },
                     x: {
                         ticks: {
-                            color: '#ccc'
+                            color: '#ccc',
+                            font: {
+                                size: 10
+                            },
+                            maxTicksLimit: 6
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -352,8 +371,15 @@ onMounted(() => {
                 },
                 plugins: {
                     legend: {
+                        position: 'top',
+                        align: 'start',
                         labels: {
-                            color: '#fff'
+                            color: '#fff',
+                            boxWidth: 12,
+                            padding: 8,
+                            font: {
+                                size: 10
+                            }
                         }
                     }
                 }
@@ -362,6 +388,7 @@ onMounted(() => {
     }
 
     // 2. Gráfico de cobertura de tests (ApexCharts)
+    // Modificación del gráfico de cobertura de tests
     if (testCoverageChart.value) {
         const testCoverageOptions = {
             series: [{
@@ -374,48 +401,78 @@ onMounted(() => {
                 toolbar: {
                     show: false
                 },
-                foreColor: '#ccc'
+                foreColor: '#ccc',
+                background: 'transparent'
             },
             plotOptions: {
                 bar: {
-                    borderRadius: 4,
+                    borderRadius: 2,
                     horizontal: true,
-                    barHeight: '60%',
-                    distributed: true
+                    barHeight: '70%',
+                    distributed: true,
+                    dataLabels: {
+                        position: 'middle'
+                    }
                 }
             },
             dataLabels: {
                 enabled: true,
-                formatter: function (val: string) {
+                formatter: function (val) {
                     return val + '%';
                 },
                 style: {
-                    fontSize: '12px',
-                    colors: ['#fff']
-                }
+                    fontSize: '10px',
+                    colors: ['#fff'],
+                    fontWeight: 'normal'
+                },
+                offsetX: 0
             },
             colors: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
             xaxis: {
                 categories: ['Core', 'UI', 'API', 'Auth', 'Utils', 'Database'],
                 labels: {
                     style: {
-                        colors: '#ccc'
+                        colors: '#ccc',
+                        fontSize: '10px'
                     }
                 },
-                max: 100
+                max: 100,
+                tickAmount: 5
             },
             yaxis: {
                 labels: {
                     style: {
-                        colors: '#ccc'
+                        colors: '#ccc',
+                        fontSize: '10px'
                     }
                 }
             },
             grid: {
-                borderColor: 'rgba(255, 255, 255, 0.1)'
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                xaxis: {
+                    lines: {
+                        show: true
+                    }
+                },
+                yaxis: {
+                    lines: {
+                        show: false
+                    }
+                },
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 10
+                }
             },
             tooltip: {
-                theme: 'dark'
+                theme: 'dark',
+                y: {
+                    formatter: function (val) {
+                        return val + '%';
+                    }
+                }
             }
         };
 
@@ -441,7 +498,7 @@ onMounted(() => {
                 ]
             },
             options: {
-                responsive: true,
+                responsive: false,
                 maintainAspectRatio: false,
                 scales: {
                     y: {
@@ -507,7 +564,7 @@ onMounted(() => {
                 ]
             },
             options: {
-                responsive: true,
+                responsive: false,
                 maintainAspectRatio: false,
                 scales: {
                     y: {
@@ -635,6 +692,49 @@ ion-col {
     padding: 15px;
 }
 
+.chart-box {
+    background: #1E1E1E;
+    border-radius: 8px;
+    padding: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-box h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+}
+
+.chart-wrapper {
+    flex: 1;
+    position: relative;
+    min-height: 200px;
+    /* Altura mínima para móviles */
+}
+
+.dashboard-grid {
+    height: calc(100vh - 120px);
+    /* Ajustar según el header */
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-row {
+    flex: 1;
+    min-height: 0;
+    /* Importante para flexbox en Chrome */
+    margin-bottom: 10px;
+}
+
+.dashboard-col {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 .chart-container {
     width: 100%;
     height: 100%;
@@ -668,17 +768,16 @@ ion-col {
     display: flex;
     flex-direction: column;
     background: #333;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 15px;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 10px;
 }
 
 .light {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    margin: 5px;
-    opacity: 0.3;
+    margin: 3px;
 }
 
 .light.red {
@@ -714,14 +813,14 @@ ion-col {
 /* Estadísticas de compatibilidad móvil */
 .realtime-stats {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
 .stat-item {
-    flex: 1;
-    text-align: center;
-    padding: 0 10px;
+    flex: 1 1 100px;
+    min-width: 0;
 }
 
 .stat-value {
@@ -802,25 +901,87 @@ ion-col {
     color: #ccc;
 }
 
-/* Aplicar altura total y por filas, solo en pantallas ≥ md */
-@media (min-width: 992px) {
-    ion-grid {
-        height: 100%;
-    }
+/* Ajustes específicos para los gráficos de la primera fila */
+.ion-row-1 .chart-container {
+    padding: 0;
+}
 
+.ion-row-1 .chart-container h3 {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Ajuste específico para el gráfico de rendimiento de API */
+.ion-row-1 ion-col:first-child .box {
+    padding: 10px;
+}
+
+/* Ajuste específico para el gráfico de cobertura de tests */
+.ion-row-1 ion-col:nth-child(2) .box {
+    padding: 10px;
+}
+
+/* Aumentar la altura de la primera fila */
+@media (min-width: 992px) {
     .ion-row-1 {
-        height: 20%;
-        max-height: 20%;
+        height: 25%;
+        /* Aumentado del 20% al 25% */
+        max-height: 25%;
     }
 
     .ion-row-2 {
-        height: 40%;
-        max-height: 40%;
+        height: 37.5%;
+        /* Ajustado */
+        max-height: 37.5%;
     }
 
     .ion-row-3 {
-        height: 40%;
-        max-height: 40%;
+        height: 37.5%;
+        /* Ajustado */
+        max-height: 37.5%;
     }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        height: auto;
+    }
+
+    .dashboard-row {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .dashboard-col {
+        margin-bottom: 10px;
+    }
+
+    .chart-wrapper {
+        min-height: 250px;
+    }
+}
+
+@media (min-width: 992px) {
+    .dashboard-row {
+        flex: 1;
+        display: flex;
+    }
+
+    /* Distribución de altura para escritorio */
+    .dashboard-row:nth-child(1) {
+        flex: 1;
+    }
+
+    /* Fila 1 - 25% */
+    .dashboard-row:nth-child(2) {
+        flex: 1.5;
+    }
+
+    /* Fila 2 - 37.5% */
+    .dashboard-row:nth-child(3) {
+        flex: 1.5;
+    }
+
+    /* Fila 3 - 37.5% */
 }
 </style>

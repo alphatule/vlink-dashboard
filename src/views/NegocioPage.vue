@@ -20,7 +20,7 @@
             <ion-grid class="dashboard-grid">
                 <!-- 🟢 Fila 1: 4 Columnas -->
                 <ion-row class="ion-row-1">
-                    <ion-col size="6" size-lg="3">
+                    <ion-col size="6" size-lg="4">
                         <div class="box">
                             <div class="chart-container">
                                 <h3>Retención de Usuarios</h3>
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </ion-col>
-                    <ion-col size="6" size-lg="3">
+                    <ion-col size="6" size-lg="4">
                         <div class="box">
                             <div class="chart-container">
                                 <h3>Actividad en Chats</h3>
@@ -36,19 +36,11 @@
                             </div>
                         </div>
                     </ion-col>
-                    <ion-col size="6" size-lg="3">
+                    <ion-col size="6" size-lg="4">
                         <div class="box">
                             <div class="chart-container">
                                 <h3>Adopción por Servidores</h3>
                                 <v-chart class="chart" :option="serverAdoptionOption" autoresize />
-                            </div>
-                        </div>
-                    </ion-col>
-                    <ion-col size="6" size-lg="3">
-                        <div class="box">
-                            <div class="chart-container">
-                                <h3>Abandonos en Login</h3>
-                                <div ref="loginDropoffChart" style="width: 100%; height: 90%;"></div>
                             </div>
                         </div>
                     </ion-col>
@@ -60,17 +52,7 @@
                         <div class="box">
                             <div class="chart-container">
                                 <h3>Usuarios Activos en Tiempo Real</h3>
-                                <div class="realtime-users-header">
-                                    <div class="realtime-users-count">
-                                        <span class="count-value">{{ activeUsers }}</span>
-                                        <span class="count-label">usuarios activos</span>
-                                    </div>
-                                    <div class="realtime-users-trend" :class="usersTrend > 0 ? 'positive' : 'negative'">
-                                        <span>{{ usersTrend > 0 ? '+' : '' }}{{ usersTrend }}%</span>
-                                        <span class="trend-icon">{{ usersTrend > 0 ? '↑' : '↓' }}</span>
-                                    </div>
-                                </div>
-                                <canvas ref="activeUsersChart"></canvas>
+                                <canvas ref="activeUsersChart" class="full-height-chart"></canvas>
                             </div>
                         </div>
                     </ion-col>
@@ -264,7 +246,7 @@ const serverAdoptionOption = reactive({
 // Estadísticas de usuarios activos en tiempo real
 const activeUsers = ref(1254);
 const usersTrend = ref(5.7);
-const activeUsersHistory = reactive(Array.from({ length: 30 }, () => Math.floor(Math.random() * 500) + 1000));
+const activeUsersHistory = ref(Array.from({ length: 30 }, () => Math.floor(Math.random() * 500) + 1000));
 
 // Estadísticas de conversión
 const conversionStats = reactive([
@@ -274,28 +256,30 @@ const conversionStats = reactive([
     { name: 'Retención 30 días', rate: 42, color: '#4BC0C0' }
 ]);
 
-// Función para actualizar usuarios activos en tiempo real
 const updateActiveUsers = () => {
     // Simular cambios en usuarios activos
     const change = Math.floor(Math.random() * 50) - 20;
     activeUsers.value = Math.max(800, activeUsers.value + change);
 
     // Calcular tendencia
-    const oldAvg = activeUsersHistory.slice(0, 15).reduce((a, b) => a + b, 0) / 15;
-    const newAvg = activeUsersHistory.slice(15).reduce((a, b) => a + b, 0) / 15;
+    const historyArray = activeUsersHistory.value;
+    const oldAvg = historyArray.slice(0, 15).reduce((a, b) => a + b, 0) / 15;
+    const newAvg = historyArray.slice(15).reduce((a, b) => a + b, 0) / 15;
     usersTrend.value = parseFloat(((newAvg - oldAvg) / oldAvg * 100).toFixed(1));
 
     // Actualizar historial
-    activeUsersHistory.shift();
-    activeUsersHistory.push(activeUsers.value);
+    const newHistory = [...historyArray];
+    newHistory.shift();
+    newHistory.push(activeUsers.value);
+    activeUsersHistory.value = newHistory;
 
     // Actualizar el gráfico
     if (activeUsersChart.value) {
         const chart = Chart.getChart(activeUsersChart.value);
         if (chart) {
             chart.data.labels = Array.from({ length: 30 }, (_, i) => `${30 - i}m`);
-            chart.data.datasets[0].data = [...activeUsersHistory];
-            chart.update();
+            chart.data.datasets[0].data = [...newHistory];
+            chart.update('none');
         }
     }
 };
@@ -306,7 +290,7 @@ onMounted(() => {
         new Chart(userRetentionChart.value, {
             type: 'line',
             data: {
-                labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5', 'Semana 6', 'Semana 7', 'Semana 8'],
+                labels: ['Semana 1', 'S. 2', 'S. 3', 'S. 4', 'S. 5', 'S. 6', 'S. 7', 'S. 8'],
                 datasets: [
                     {
                         label: 'Cohorte Ene',
@@ -529,11 +513,13 @@ onMounted(() => {
                 datasets: [
                     {
                         label: 'Usuarios Activos',
-                        data: activeUsersHistory,
+                        data: activeUsersHistory.value, // Asumiendo que ahora es un ref
                         borderColor: '#4BC0C0',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         tension: 0.4,
-                        fill: true
+                        fill: true,
+                        pointRadius: 2, // Puntos más pequeños
+                        borderWidth: 2
                     }
                 ]
             },
@@ -544,12 +530,13 @@ onMounted(() => {
                     y: {
                         beginAtZero: false,
                         title: {
-                            display: true,
-                            text: 'Usuarios',
-                            color: '#fff'
+                            display: false, // Ocultar título del eje Y
                         },
                         ticks: {
-                            color: '#ccc'
+                            color: '#ccc',
+                            font: {
+                                size: 10 // Texto más pequeño
+                            }
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -558,7 +545,10 @@ onMounted(() => {
                     x: {
                         ticks: {
                             color: '#ccc',
-                            maxTicksLimit: 10
+                            maxTicksLimit: 6, // Mostrar menos etiquetas en el eje X
+                            font: {
+                                size: 10 // Texto más pequeño
+                            }
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -567,8 +557,18 @@ onMounted(() => {
                 },
                 plugins: {
                     legend: {
-                        labels: {
-                            color: '#fff'
+                        display: false // Ocultar leyenda
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            title: function (tooltipItems) {
+                                return 'Tiempo: ' + tooltipItems[0].label;
+                            },
+                            label: function (context) {
+                                return 'Usuarios: ' + context.raw;
+                            }
                         }
                     }
                 }
@@ -729,7 +729,7 @@ onMounted(() => {
     }
 
     // Iniciar actualizaciones en tiempo real
-    setInterval(updateActiveUsers, 2000);
+    setInterval(updateActiveUsers, 5000);
 });
 
 // Función auxiliar para generar datos de heatmap
@@ -748,7 +748,7 @@ ion-row {
 
 ion-col {
     max-height: 100%;
-    --ion-grid-column-padding: 10px;
+    --ion-grid-column-padding: 8px;
 }
 
 /* El contenido real de cada columna */
@@ -761,23 +761,40 @@ ion-col {
     display: flex;
     justify-content: center;
     align-items: start;
-    padding: 15px;
+    padding: 12px;
 }
 
+/* Estilos específicos para el gráfico de usuarios activos */
+.full-height-chart {
+    height: 95% !important;
+    width: 100%;
+}
+
+/* Ajuste para el contenedor del gráfico */
 .chart-container {
     width: 100%;
-    height: 100%;
+    height: 95%;
     display: flex;
     flex-direction: column;
 }
 
 .chart-container h3 {
     margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 16px;
+    margin-bottom: 5px;
+    /* Reducido para dar más espacio al gráfico */
+    font-size: 14px;
     color: #fff;
     text-align: center;
 }
+
+/* .chart-container h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    line-height: 1.2;
+} */
 
 .chart {
     height: 90%;
@@ -833,10 +850,11 @@ ion-col {
     flex-direction: column;
     height: 100%;
     justify-content: space-around;
+    padding: 5px 0;
 }
 
 .conversion-item {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .conversion-header {
@@ -846,8 +864,10 @@ ion-col {
 }
 
 .conversion-title {
-    font-size: 14px;
+    font-size: 12px;
+    /* Reducido */
     color: #fff;
+    line-height: 1.2;
 }
 
 .conversion-rate {
@@ -857,15 +877,26 @@ ion-col {
 }
 
 .conversion-bar {
-    height: 8px;
+    height: 6px;
+    /* Reducido */
     background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
+    border-radius: 3px;
     overflow: hidden;
 }
 
 .conversion-progress {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 3px;
+}
+
+/* Estilos específicos para gráficos pequeños en la primera fila */
+.ion-row-1 .chart-container h3 {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.ion-row-1 .box {
+    padding: 8px;
 }
 
 /* Aplicar altura total y por filas, solo en pantallas ≥ md */
@@ -875,18 +906,48 @@ ion-col {
     }
 
     .ion-row-1 {
-        height: 20%;
-        max-height: 20%;
+        height: 30%;
+        /* Aumentado del 20% al 30% */
+        max-height: 30%;
     }
 
     .ion-row-2 {
-        height: 40%;
-        max-height: 40%;
+        height: 35%;
+        /* Reducido del 40% al 35% */
+        max-height: 35%;
     }
 
     .ion-row-3 {
-        height: 40%;
-        max-height: 40%;
+        height: 35%;
+        /* Reducido del 40% al 35% */
+        max-height: 35%;
+    }
+}
+
+/* Responsive: En pantallas pequeñas, hacer los gráficos más grandes */
+@media (max-width: 991px) {
+    .ion-row-1 ion-col {
+        margin-bottom: 15px;
+    }
+
+    .chart-container h3 {
+        font-size: 16px;
+    }
+
+    .box {
+        min-height: 250px;
+    }
+}
+
+/* Ajustes adicionales para pantallas muy pequeñas */
+@media (max-width: 576px) {
+    .ion-row-1 ion-col {
+        size: 12;
+        /* Forzar que cada gráfico ocupe toda la fila en móvil */
+    }
+
+    .box {
+        min-height: 200px;
     }
 }
 </style>
