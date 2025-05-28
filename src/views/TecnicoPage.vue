@@ -572,7 +572,8 @@ ion-col {
     height: 100%;
     display: flex;
     flex-direction: column;
-    min-height: 0;;
+    min-height: 0;
+    ;
 }
 
 .chart-container h3 {
